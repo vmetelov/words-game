@@ -254,23 +254,31 @@
         static void Selftest(string[][] pcWords)
         {
             Console.WriteLine("Selftest is started.");
-            Console.Write("Repeated words: ");
+            string repeatedWords = "Selftest failed. Repeated words: ";
+            bool isSuccessful = true;
 
             for (int counterArrays = 0; counterArrays < pcWords.Length; counterArrays++)
             {
+                HashSet<string> knownElements = new();
+
                 for (int counterWords = 0; counterWords < pcWords[counterArrays].Length; counterWords++)
                 {
-                    for (int counter = counterWords + 1; counter < pcWords[counterArrays].Length; counter++)
+                    if (!knownElements.Add(pcWords[counterArrays][counterWords]))
                     {
-                        if (pcWords[counterArrays][counter] == pcWords[counterArrays][counterWords])
-                        {
-                            Console.Write(pcWords[counterArrays][counterWords] + " ");
-                        }
+                        isSuccessful = false;
+                        repeatedWords += pcWords[counterArrays][counterWords] + " ";
                     }
                 }
             }
-            Console.WriteLine();
-            Console.WriteLine("Selftest is finished.");
+
+            if (isSuccessful)
+            {
+                Console.WriteLine("Selftest is successful.");
+            }
+            else
+            {
+                Console.WriteLine(repeatedWords);
+            }
         }
     }
 }
