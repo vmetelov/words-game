@@ -1,0 +1,13 @@
+# Words
+
+In this game, you play with PC. Each of you take turns in writing ONE word (not combination of words) starting with the last letter of the previous word. The first word is started from 'a' (first letter of alphabet) and is written by PC for user to know which letter should be first in his word. There are 2 ways to end the game: from user through special command or from PC if it doesn't have any unused words starting with the letter. Actually, this latter one shouldn't happen - if it happened, you probably should just add some words on that letter to PC dictionary.
+
+In this example, the words are nouns, but it may differ.
+
+The PC dictionary - separated file.
+
+This game was created as Console app to be able to run on any OS.
+
+Initially, this game was created to prevent me from forgetting English words (especially new ones). Actually, I've played in it only several test times because I realized it was bad way for learning for me. After that, I conducted only architectural improvements. Feel free to open issue to suggest ideas for further improving architecture of the application.
+
+In the case of nouns, there was suspicion that quantity of existing common nouns starting with 'y' and 'z' will not be enough, so I've prepared some code in the case. But since I haven't seriously played after that and only conducted small tests, I don't know whether it is needed (then that code should be uncommented and tested, and even some additional changes should be made) or not (then it should be removed).
