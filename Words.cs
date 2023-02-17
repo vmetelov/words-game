@@ -216,7 +216,7 @@
             Console.WriteLine("Welcome to Test Mode!");
             while (true)
             {
-                Console.WriteLine("Do you want to 'add' new word to PC dictionary, start his 'selftest' on repeated words or 'exit' of Test Mode?");
+                Console.WriteLine("Do you want to 'add' new word to PC dictionary, start 'check' for duplicates or 'exit' of Test Mode?");
                 command = Console.ReadLine()!;
 
                 if (command == "add")
@@ -240,9 +240,9 @@
                         Console.WriteLine($"Word '{temp}' added.");
                     }
                 }
-                else if (command == "selftest")
+                else if (command == "check")
                 {
-                    Selftest(pcWords);
+                    CheckDuplicates(pcWords);
                 }
                 else if (command == "exit")
                 {
@@ -251,26 +251,48 @@
             }
         }
 
-        static void Selftest(string[][] pcWords)
+        static void CheckDuplicates(string[][] pcWords)
         {
-            Console.WriteLine("Selftest is started.");
-            Console.Write("Repeated words: ");
+            Console.WriteLine("Check is started.");
+            string repeatedWords = "Check failed. Repeated words: ";
+            bool isCheckSuccessful = true;
 
             for (int counterArrays = 0; counterArrays < pcWords.Length; counterArrays++)
             {
+                HashSet<string> knownElements = new();
+
+                bool isArraySuccessful = true;
+                int initialLength = pcWords[counterArrays].Length;
+
                 for (int counterWords = 0; counterWords < pcWords[counterArrays].Length; counterWords++)
                 {
-                    for (int counter = counterWords + 1; counter < pcWords[counterArrays].Length; counter++)
+                    if (!knownElements.Add(pcWords[counterArrays][counterWords]))
                     {
-                        if (pcWords[counterArrays][counter] == pcWords[counterArrays][counterWords])
-                        {
-                            Console.Write(pcWords[counterArrays][counterWords] + " ");
-                        }
+                        isCheckSuccessful = isArraySuccessful = false;
+                        repeatedWords += pcWords[counterArrays][counterWords] + " "; // Not StringBuilder because here shouldn't be many duplicates.
                     }
                 }
+
+                if (!isArraySuccessful)
+                {
+                    Array.Resize(ref pcWords[counterArrays], knownElements.Count);
+                    knownElements.CopyTo(pcWords[counterArrays]);
+                }
+
+                if (pcWords[counterArrays].Length != initialLength)
+                {
+                    Console.WriteLine($"Letter {(char)('a' + counterArrays)}, array initial length: {initialLength}, array current length: {pcWords[counterArrays].Length}");
+                }
             }
-            Console.WriteLine();
-            Console.WriteLine("Selftest is finished.");
+
+            if (isCheckSuccessful)
+            {
+                Console.WriteLine("Check is successful.");
+            }
+            else
+            {
+                Console.WriteLine(repeatedWords);
+            }
         }
     }
 }
