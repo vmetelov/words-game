@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-
-namespace Words
+﻿namespace Words
 {
     class Program
     {
