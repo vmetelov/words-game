@@ -189,54 +189,53 @@ namespace Words
 
         static void FillPCWords(ref string[][] pcWords, string file)
         {
-            var reader = new StreamReader(file);
-
-            string input;
-            char[] separators = { ' ' };
-
-            for (int counter = 0, end = pcWords.Length; counter < end; counter++)
+            using (var reader = new StreamReader(file))
             {
-                input = reader.ReadLine()!;
-                pcWords[counter] = input.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-            }
+                string input;
+                char[] separators = { ' ' };
 
-            reader.Close();
+                for (int counter = 0, end = pcWords.Length; counter < end; counter++)
+                {
+                    input = reader.ReadLine()!;
+                    pcWords[counter] = input.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+                }
+            }
         }
 
         static void SavePCWords(string[][] pcWords, string file)
         {
             File.WriteAllText(file, string.Empty); // Truncate file.
 
-            var writer = new StreamWriter(file);
-            for (int counterArrays = 0, endArrays = pcWords.Length; counterArrays < endArrays; counterArrays++)
+            using (var writer = new StreamWriter(file))
             {
-                for (int counterWords = 0, endWords = pcWords[counterArrays].Length; counterWords < endWords; counterWords++)
+                for (int counterArrays = 0, endArrays = pcWords.Length; counterArrays < endArrays; counterArrays++)
                 {
-                    writer.Write(pcWords[counterArrays][counterWords] + " ");
+                    for (int counterWords = 0, endWords = pcWords[counterArrays].Length; counterWords < endWords; counterWords++)
+                    {
+                        writer.Write(pcWords[counterArrays][counterWords] + " ");
+                    }
+
+                    writer.WriteLine();
                 }
-
-                writer.WriteLine();
             }
-
-            writer.Close();
         }
 
         static void SaveQuotedPCWords(string[][] pcWords, string file)
         {
             File.WriteAllText(file, string.Empty); // Truncate file.
 
-            var writer = new StreamWriter(file);
-            for (int counterArrays = 0, endArrays = pcWords.Length; counterArrays < endArrays; counterArrays++)
+            using (var writer = new StreamWriter(file))
             {
-                for (int counterWords = 0, endWords = pcWords[counterArrays].Length; counterWords < endWords; counterWords++)
+                for (int counterArrays = 0, endArrays = pcWords.Length; counterArrays < endArrays; counterArrays++)
                 {
-                    writer.Write("\"" + pcWords[counterArrays][counterWords] + "\"" + ", ");
+                    for (int counterWords = 0, endWords = pcWords[counterArrays].Length; counterWords < endWords; counterWords++)
+                    {
+                        writer.Write("\"" + pcWords[counterArrays][counterWords] + "\"" + ", ");
+                    }
+
+                    writer.WriteLine();
                 }
-
-                writer.WriteLine();
             }
-
-            writer.Close();
         }
 
         static void TestMode(ref string[][] pcWords)
