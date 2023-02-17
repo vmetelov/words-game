@@ -30,7 +30,7 @@ namespace Words
 
 
             Console.WriteLine("Game over!");
-            Console.WriteLine("Total quantity of used words = {0}.", usedWords.Length);
+            Console.WriteLine($"Total quantity of used words = {usedWords.Length}.");
 
 
             SavePCWords(pcWords, file);
@@ -78,7 +78,7 @@ namespace Words
                             if (Console.ReadLine() == "y")
                             {
                                 AddNewWord(temp, ref pcWords, letter);
-                                Console.WriteLine("Word '{0}' remembered.", temp);
+                                Console.WriteLine($"Word '{temp}' remembered.");
                             }
                             else
                             {
@@ -99,7 +99,7 @@ namespace Words
                     }
                     else
                     {
-                        Console.WriteLine("Word '{0}' was already used.", temp);
+                        Console.WriteLine($"Word '{temp}' was already used.");
                     }
                 }
                 else
@@ -176,7 +176,7 @@ namespace Words
                     }
                     else
                     {
-                        Console.WriteLine("Word '{0}' was already used", temp);
+                        Console.WriteLine($"Word '{temp}' was already used");
                     }
                 }
                 else // If PC used all words - end of game.
@@ -262,12 +262,12 @@ namespace Words
 
                     if (CheckExistence(temp, pcWords, letter)) // Check if this word exist in PC dictionary.
                     {
-                        Console.WriteLine("Word '{0}' already exist in PC dictionary.", temp);
+                        Console.WriteLine($"Word '{temp}' already exist in PC dictionary.");
                     }
                     else
                     {
                         AddNewWord(temp, ref pcWords, letter);
-                        Console.WriteLine("Word '{0}' added.", temp);
+                        Console.WriteLine($"Word '{temp}' added.");
                     }
                 }
                 else if (command == "selftest")
