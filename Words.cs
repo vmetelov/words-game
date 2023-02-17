@@ -34,7 +34,6 @@ namespace Words
 
 
             SavePCWords(pcWords, file);
-            SaveQuotedPCWords(pcWords, "pcWords_quoted.txt");
         }
 
         static void UserWord(ref int endGame, ref char letter, ref int[] counter, List<string> usedWords, ref string[][] pcWords)
@@ -207,22 +206,6 @@ namespace Words
                 for (int counterWords = 0; counterWords < pcWords[counterArrays].Length; counterWords++)
                 {
                     writer.Write(pcWords[counterArrays][counterWords] + " ");
-                }
-
-                writer.WriteLine();
-            }
-        }
-
-        static void SaveQuotedPCWords(string[][] pcWords, string file)
-        {
-            File.WriteAllText(file, string.Empty); // Truncate file.
-
-            using StreamWriter writer = new(file);
-            for (int counterArrays = 0; counterArrays < pcWords.Length; counterArrays++)
-            {
-                for (int counterWords = 0; counterWords < pcWords[counterArrays].Length; counterWords++)
-                {
-                    writer.Write("\"" + pcWords[counterArrays][counterWords] + "\"" + ", ");
                 }
 
                 writer.WriteLine();
