@@ -39,7 +39,7 @@ namespace Words
 
         static void UserWord(ref int endGame, ref char letter, ref int[] counter, ref string[] usedWords, ref string[][] pcWords)
         {
-            string temp;
+            string? temp;
             int correctAnswer = 0;
 
             while (correctAnswer == 0)
@@ -47,7 +47,7 @@ namespace Words
                 Console.Write("User: ");
                 temp = Console.ReadLine();
 
-                if (temp == "")
+                if (string.IsNullOrEmpty(temp))
                 {
                     continue;
                 }
@@ -196,7 +196,7 @@ namespace Words
 
             for (int counter = 0, end = pcWords.Length; counter < end; counter++)
             {
-                input = reader.ReadLine();
+                input = reader.ReadLine()!;
                 pcWords[counter] = input.Split(separators, StringSplitOptions.RemoveEmptyEntries);
             }
 
@@ -247,13 +247,13 @@ namespace Words
             while (true)
             {
                 Console.WriteLine("Do you want to 'add' new word to PC dictionary, start his 'selftest' on repeated words or 'exit' of Test Mode?");
-                command = Console.ReadLine();
+                command = Console.ReadLine()!;
 
                 if (command == "add")
                 {
                     Console.WriteLine("Which word do you want to add?");
-                    string temp = Console.ReadLine();
-                    if (temp == "")
+                    string? temp = Console.ReadLine();
+                    if (string.IsNullOrEmpty(temp))
                     {
                         continue;
                     }
