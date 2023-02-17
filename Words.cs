@@ -5,7 +5,7 @@ namespace Words
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             int[] counter = new int[26]; // Counter of used PC words starting with each letter.
             List<string> usedWords = new();
@@ -30,7 +30,7 @@ namespace Words
 
 
             Console.WriteLine("Game over!");
-            Console.WriteLine($"Total quantity of used words = {usedWords.Count()}.");
+            Console.WriteLine($"Total quantity of used words = {usedWords.Count}.");
 
 
             SavePCWords(pcWords, file);
@@ -88,7 +88,7 @@ namespace Words
 
                         AddUsedWord(temp, usedWords);
                         correctAnswer = 1;
-                        letter = temp[temp.Length - 1]; // Remember letter for next player.
+                        letter = temp[^1]; // Remember letter for next player.
                         /* If it will be needed - uncomment and test
                         // If all existent common words on that letter are used, use previous letter
                         if ((letter == 'x' || letter == 'y') && (counter[letter - 'a'] == pcWords[letter - 'a'].Length))
@@ -140,7 +140,7 @@ namespace Words
         static void AddNewWord(string newWord, ref string[][] pcWords, char letter)
         {
             Array.Resize(ref pcWords[letter - 'a'], pcWords[letter - 'a'].Length + 1); // Resize appropriate letter words array by 1 more.
-            pcWords[letter - 'a'][pcWords[letter - 'a'].Length - 1] = newWord; // Remember new word.
+            pcWords[letter - 'a'][^1] = newWord; // Remember new word.
         }
 
         static void PCWord(ref int endGame, ref char letter, ref int[] counter, List<string> usedWords, string[][] pcWords)
@@ -161,7 +161,7 @@ namespace Words
                     {
                         AddUsedWord(temp, usedWords);
                         correctAnswer = 1;
-                        letter = temp[temp.Length - 1]; // Remember letter for next player.
+                        letter = temp[^1]; // Remember letter for next player.
                         /* If it will be needed - uncomment and test
                         // If all existent common words on that letter are used, use previous letter
                         if ((letter == 'x' || letter == 'y') && (counter[letter - 'a'] == pcWords[letter - 'a'].Length))
@@ -185,16 +185,15 @@ namespace Words
 
         static void FillPCWords(ref string[][] pcWords, string file)
         {
-            using (var reader = new StreamReader(file))
-            {
-                string input;
-                char[] separators = { ' ' };
+            using StreamReader reader = new(file);
 
-                for (int counter = 0, end = pcWords.Length; counter < end; counter++)
-                {
-                    input = reader.ReadLine()!;
-                    pcWords[counter] = input.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-                }
+            string input;
+            char[] separators = { ' ' };
+
+            for (int counter = 0, end = pcWords.Length; counter < end; counter++)
+            {
+                input = reader.ReadLine()!;
+                pcWords[counter] = input.Split(separators, StringSplitOptions.RemoveEmptyEntries);
             }
         }
 
@@ -202,17 +201,15 @@ namespace Words
         {
             File.WriteAllText(file, string.Empty); // Truncate file.
 
-            using (var writer = new StreamWriter(file))
+            using StreamWriter writer = new(file);
+            for (int counterArrays = 0, endArrays = pcWords.Length; counterArrays < endArrays; counterArrays++)
             {
-                for (int counterArrays = 0, endArrays = pcWords.Length; counterArrays < endArrays; counterArrays++)
+                for (int counterWords = 0, endWords = pcWords[counterArrays].Length; counterWords < endWords; counterWords++)
                 {
-                    for (int counterWords = 0, endWords = pcWords[counterArrays].Length; counterWords < endWords; counterWords++)
-                    {
-                        writer.Write(pcWords[counterArrays][counterWords] + " ");
-                    }
-
-                    writer.WriteLine();
+                    writer.Write(pcWords[counterArrays][counterWords] + " ");
                 }
+
+                writer.WriteLine();
             }
         }
 
@@ -220,17 +217,15 @@ namespace Words
         {
             File.WriteAllText(file, string.Empty); // Truncate file.
 
-            using (var writer = new StreamWriter(file))
+            using StreamWriter writer = new(file);
+            for (int counterArrays = 0, endArrays = pcWords.Length; counterArrays < endArrays; counterArrays++)
             {
-                for (int counterArrays = 0, endArrays = pcWords.Length; counterArrays < endArrays; counterArrays++)
+                for (int counterWords = 0, endWords = pcWords[counterArrays].Length; counterWords < endWords; counterWords++)
                 {
-                    for (int counterWords = 0, endWords = pcWords[counterArrays].Length; counterWords < endWords; counterWords++)
-                    {
-                        writer.Write("\"" + pcWords[counterArrays][counterWords] + "\"" + ", ");
-                    }
-
-                    writer.WriteLine();
+                    writer.Write("\"" + pcWords[counterArrays][counterWords] + "\"" + ", ");
                 }
+
+                writer.WriteLine();
             }
         }
 
