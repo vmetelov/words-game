@@ -216,7 +216,7 @@
             Console.WriteLine("Welcome to Test Mode!");
             while (true)
             {
-                Console.WriteLine("Do you want to 'add' new word to PC dictionary, start his 'selftest' on repeated words or 'exit' of Test Mode?");
+                Console.WriteLine("Do you want to 'add' new word to PC dictionary, start 'check' for duplicates or 'exit' of Test Mode?");
                 command = Console.ReadLine()!;
 
                 if (command == "add")
@@ -240,9 +240,9 @@
                         Console.WriteLine($"Word '{temp}' added.");
                     }
                 }
-                else if (command == "selftest")
+                else if (command == "check")
                 {
-                    Selftest(pcWords);
+                    CheckDuplicates(pcWords);
                 }
                 else if (command == "exit")
                 {
@@ -251,11 +251,11 @@
             }
         }
 
-        static void Selftest(string[][] pcWords)
+        static void CheckDuplicates(string[][] pcWords)
         {
-            Console.WriteLine("Selftest is started.");
-            string repeatedWords = "Selftest failed. Repeated words: ";
             bool isSuccessful = true;
+            Console.WriteLine("Check is started.");
+            string repeatedWords = "Check failed. Repeated words: ";
 
             for (int counterArrays = 0; counterArrays < pcWords.Length; counterArrays++)
             {
@@ -266,14 +266,14 @@
                     if (!knownElements.Add(pcWords[counterArrays][counterWords]))
                     {
                         isSuccessful = false;
-                        repeatedWords += pcWords[counterArrays][counterWords] + " ";
+                        repeatedWords += pcWords[counterArrays][counterWords] + " "; // Not StringBuilder because here shouldn't be many duplicates.
                     }
                 }
             }
 
             if (isSuccessful)
             {
-                Console.WriteLine("Selftest is successful.");
+                Console.WriteLine("Check is successful.");
             }
             else
             {
