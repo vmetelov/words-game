@@ -253,25 +253,39 @@
 
         static void CheckDuplicates(string[][] pcWords)
         {
-            bool isSuccessful = true;
             Console.WriteLine("Check is started.");
             string repeatedWords = "Check failed. Repeated words: ";
+            bool isCheckSuccessful = true;
 
             for (int counterArrays = 0; counterArrays < pcWords.Length; counterArrays++)
             {
                 HashSet<string> knownElements = new();
 
+                bool isArraySuccessful = true;
+                int initialLength = pcWords[counterArrays].Length;
+
                 for (int counterWords = 0; counterWords < pcWords[counterArrays].Length; counterWords++)
                 {
                     if (!knownElements.Add(pcWords[counterArrays][counterWords]))
                     {
-                        isSuccessful = false;
+                        isCheckSuccessful = isArraySuccessful = false;
                         repeatedWords += pcWords[counterArrays][counterWords] + " "; // Not StringBuilder because here shouldn't be many duplicates.
                     }
                 }
+
+                if (!isArraySuccessful)
+                {
+                    Array.Resize(ref pcWords[counterArrays], knownElements.Count);
+                    knownElements.CopyTo(pcWords[counterArrays]);
+                }
+
+                if (pcWords[counterArrays].Length != initialLength)
+                {
+                    Console.WriteLine($"Letter {(char)('a' + counterArrays)}, array initial length: {initialLength}, array current length: {pcWords[counterArrays].Length}");
+                }
             }
 
-            if (isSuccessful)
+            if (isCheckSuccessful)
             {
                 Console.WriteLine("Check is successful.");
             }
