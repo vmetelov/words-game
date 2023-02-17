@@ -10,7 +10,7 @@
 
             string file = "pcWords.txt"; // Path to file with words.
 
-            FillPCWords(ref pcWords, file);
+            FillPCWords(pcWords, file);
 
             bool isEndGame = false;
             char letter = 'a';
@@ -21,8 +21,8 @@
 
             while (!isEndGame)
             {
-                PCWord(ref isEndGame, ref letter, ref counter, usedWords, pcWords); // PC first - for user can see, at witch letter he need write his word.
-                UserWord(ref isEndGame, ref letter, ref counter, usedWords, ref pcWords);
+                PCWord(ref isEndGame, ref letter, counter, usedWords, pcWords); // PC first - for user can see, at witch letter he need write his word.
+                UserWord(ref isEndGame, ref letter, counter, usedWords, pcWords);
             }
 
 
@@ -33,7 +33,7 @@
             SavePCWords(pcWords, file);
         }
 
-        static void UserWord(ref bool isEndGame, ref char letter, ref int[] counter, List<string> usedWords, ref string[][] pcWords)
+        static void UserWord(ref bool isEndGame, ref char letter, int[] counter, List<string> usedWords, string[][] pcWords)
         {
             string? temp;
             bool isWrongAnswer = true;
@@ -54,12 +54,12 @@
                 }
                 else if (temp == "xxx") // Use prompt.
                 {
-                    PCWord(ref isEndGame, ref letter, ref counter, usedWords, pcWords);
+                    PCWord(ref isEndGame, ref letter, counter, usedWords, pcWords);
                     break;
                 }
                 else if (temp == "_test_")
                 {
-                    TestMode(ref pcWords);
+                    TestMode(pcWords);
                     isEndGame = true;
                     break;
                 }
@@ -73,7 +73,7 @@
 
                             if (Console.ReadLine() == "y")
                             {
-                                AddNewWord(temp, ref pcWords, letter);
+                                AddNewWord(temp, pcWords, letter);
                                 Console.WriteLine($"Word '{temp}' remembered.");
                             }
                             else
@@ -133,13 +133,13 @@
             usedWords.Add(newWord); // Remember used word.
         }
 
-        static void AddNewWord(string newWord, ref string[][] pcWords, char letter)
+        static void AddNewWord(string newWord, string[][] pcWords, char letter)
         {
             Array.Resize(ref pcWords[letter - 'a'], pcWords[letter - 'a'].Length + 1); // Resize appropriate letter words array by 1 more.
             pcWords[letter - 'a'][^1] = newWord; // Remember new word.
         }
 
-        static void PCWord(ref bool isEndGame, ref char letter, ref int[] counter, List<string> usedWords, string[][] pcWords)
+        static void PCWord(ref bool isEndGame, ref char letter, int[] counter, List<string> usedWords, string[][] pcWords)
         {
             int orderNumber = letter - 'a';
             string temp;
@@ -179,7 +179,7 @@
             }
         }
 
-        static void FillPCWords(ref string[][] pcWords, string file)
+        static void FillPCWords(string[][] pcWords, string file)
         {
             using StreamReader reader = new(file);
 
@@ -209,7 +209,7 @@
             }
         }
 
-        static void TestMode(ref string[][] pcWords)
+        static void TestMode(string[][] pcWords)
         {
             string command;
 
@@ -236,7 +236,7 @@
                     }
                     else
                     {
-                        AddNewWord(temp, ref pcWords, letter);
+                        AddNewWord(temp, pcWords, letter);
                         Console.WriteLine($"Word '{temp}' added.");
                     }
                 }
