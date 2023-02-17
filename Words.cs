@@ -65,9 +65,9 @@
                 }
                 else if (temp[0] == letter)
                 {
-                    if (CheckUnique(temp, usedWords)) // Check if this word was already used.
+                    if (IsUnique(temp, usedWords)) // Check if this word was already used.
                     {
-                        if (!CheckExistence(temp, pcWords, letter)) // Check if this word exist in PC dictionary.
+                        if (!IsKnown(temp, pcWords, letter)) // Check if this word present in PC dictionary.
                         {
                             Console.WriteLine("I don't know such word. Are you sure? (y/n)");
 
@@ -105,7 +105,7 @@
             }
         }
 
-        static bool CheckUnique(string word, List<string> usedWords)
+        static bool IsUnique(string word, List<string> usedWords)
         {
             if (usedWords.Contains(word))
             {
@@ -114,7 +114,7 @@
             return true;
         }
 
-        static bool CheckExistence(string word, string[][] pcWords, char letter)
+        static bool IsKnown(string word, string[][] pcWords, char letter)
         {
             int orderNumber = letter - 'a';
 
@@ -153,7 +153,7 @@
                     counter[orderNumber]++; // Increase counter of used words on this letter.
                     Console.WriteLine("PC  : " + temp); // Display word.
 
-                    if (CheckUnique(temp, usedWords))
+                    if (IsUnique(temp, usedWords))
                     {
                         AddUsedWord(temp, usedWords);
                         isWrongAnswer = false;
@@ -230,9 +230,9 @@
 
                     char letter = temp[0];
 
-                    if (CheckExistence(temp, pcWords, letter)) // Check if this word exist in PC dictionary.
+                    if (IsKnown(temp, pcWords, letter)) // Check if this word present in PC dictionary.
                     {
-                        Console.WriteLine($"Word '{temp}' already exist in PC dictionary.");
+                        Console.WriteLine($"Word '{temp}' already present in PC dictionary.");
                     }
                     else
                     {
