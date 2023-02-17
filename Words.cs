@@ -122,7 +122,7 @@ namespace Words
         {
             int orderNumber = letter - 'a';
 
-            for (int counter = 0, end = pcWords[orderNumber].Length; counter < end; counter++)
+            for (int counter = 0; counter < pcWords[orderNumber].Length; counter++)
             {
                 if (pcWords[orderNumber][counter] == word)
                 {
@@ -190,7 +190,7 @@ namespace Words
             string input;
             char[] separators = { ' ' };
 
-            for (int counter = 0, end = pcWords.Length; counter < end; counter++)
+            for (int counter = 0; counter < pcWords.Length; counter++)
             {
                 input = reader.ReadLine()!;
                 pcWords[counter] = input.Split(separators, StringSplitOptions.RemoveEmptyEntries);
@@ -202,9 +202,9 @@ namespace Words
             File.WriteAllText(file, string.Empty); // Truncate file.
 
             using StreamWriter writer = new(file);
-            for (int counterArrays = 0, endArrays = pcWords.Length; counterArrays < endArrays; counterArrays++)
+            for (int counterArrays = 0; counterArrays < pcWords.Length; counterArrays++)
             {
-                for (int counterWords = 0, endWords = pcWords[counterArrays].Length; counterWords < endWords; counterWords++)
+                for (int counterWords = 0; counterWords < pcWords[counterArrays].Length; counterWords++)
                 {
                     writer.Write(pcWords[counterArrays][counterWords] + " ");
                 }
@@ -218,9 +218,9 @@ namespace Words
             File.WriteAllText(file, string.Empty); // Truncate file.
 
             using StreamWriter writer = new(file);
-            for (int counterArrays = 0, endArrays = pcWords.Length; counterArrays < endArrays; counterArrays++)
+            for (int counterArrays = 0; counterArrays < pcWords.Length; counterArrays++)
             {
-                for (int counterWords = 0, endWords = pcWords[counterArrays].Length; counterWords < endWords; counterWords++)
+                for (int counterWords = 0; counterWords < pcWords[counterArrays].Length; counterWords++)
                 {
                     writer.Write("\"" + pcWords[counterArrays][counterWords] + "\"" + ", ");
                 }
@@ -276,11 +276,11 @@ namespace Words
             Console.WriteLine("Selftest is started.");
             Console.Write("Repeated words: ");
 
-            for (int counterArrays = 0, endArrays = pcWords.Length; counterArrays < endArrays; counterArrays++)
+            for (int counterArrays = 0; counterArrays < pcWords.Length; counterArrays++)
             {
-                for (int counterWords = 0, endWords = pcWords[counterArrays].Length; counterWords < endWords; counterWords++)
+                for (int counterWords = 0; counterWords < pcWords[counterArrays].Length; counterWords++)
                 {
-                    for (int counter = counterWords + 1, end = endWords; counter < end; counter++)
+                    for (int counter = counterWords + 1; counter < pcWords[counterArrays].Length; counter++)
                     {
                         if (pcWords[counterArrays][counter] == pcWords[counterArrays][counterWords])
                         {
