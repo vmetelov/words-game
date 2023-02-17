@@ -8,7 +8,7 @@ namespace Words
         static void Main(string[] args)
         {
             int[] counter = new int[26]; // Counter of used PC words starting with each letter.
-            string[] usedWords = new string[0];
+            List<string> usedWords = new();
             string[][] pcWords = new string[26][];
 
             string file = "pcWords.txt"; // Path to file with words.
@@ -24,20 +24,20 @@ namespace Words
 
             while (endGame == 0)
             {
-                PCWord(ref endGame, ref letter, ref counter, ref usedWords, pcWords); // PC first - for user can see, at witch letter he need write his word.
-                UserWord(ref endGame, ref letter, ref counter, ref usedWords, ref pcWords);
+                PCWord(ref endGame, ref letter, ref counter, usedWords, pcWords); // PC first - for user can see, at witch letter he need write his word.
+                UserWord(ref endGame, ref letter, ref counter, usedWords, ref pcWords);
             }
 
 
             Console.WriteLine("Game over!");
-            Console.WriteLine($"Total quantity of used words = {usedWords.Length}.");
+            Console.WriteLine($"Total quantity of used words = {usedWords.Count()}.");
 
 
             SavePCWords(pcWords, file);
             SaveQuotedPCWords(pcWords, "pcWords_quoted.txt");
         }
 
-        static void UserWord(ref int endGame, ref char letter, ref int[] counter, ref string[] usedWords, ref string[][] pcWords)
+        static void UserWord(ref int endGame, ref char letter, ref int[] counter, List<string> usedWords, ref string[][] pcWords)
         {
             string? temp;
             int correctAnswer = 0;
@@ -58,7 +58,7 @@ namespace Words
                 }
                 else if (temp == "xxx") // Use prompt.
                 {
-                    PCWord(ref endGame, ref letter, ref counter, ref usedWords, pcWords);
+                    PCWord(ref endGame, ref letter, ref counter, usedWords, pcWords);
                     break;
                 }
                 else if (temp == "_test_")
@@ -86,7 +86,7 @@ namespace Words
                             }
                         }
 
-                        AddUsedWord(temp, ref usedWords);
+                        AddUsedWord(temp, usedWords);
                         correctAnswer = 1;
                         letter = temp[temp.Length - 1]; // Remember letter for next player.
                         /* If it will be needed - uncomment and test
@@ -109,14 +109,11 @@ namespace Words
             }
         }
 
-        static bool CheckUnique(string word, string[] usedWords)
+        static bool CheckUnique(string word, List<string> usedWords)
         {
-            for (int counter = 0, end = usedWords.Length; counter < end; counter++)
+            if (usedWords.Contains(word))
             {
-                if (usedWords[counter] == word)
-                {
-                    return false;
-                }
+                return false;
             }
             return true;
         }
@@ -135,10 +132,9 @@ namespace Words
             return false;
         }
 
-        static void AddUsedWord(string newWord, ref string[] usedWords)
+        static void AddUsedWord(string newWord, List<string> usedWords)
         {
-            Array.Resize(ref usedWords, usedWords.Length + 1); // Resize usedWords by 1 more.
-            usedWords[usedWords.Length - 1] = newWord; // Remember used word.
+            usedWords.Add(newWord); // Remember used word.
         }
 
         static void AddNewWord(string newWord, ref string[][] pcWords, char letter)
@@ -147,7 +143,7 @@ namespace Words
             pcWords[letter - 'a'][pcWords[letter - 'a'].Length - 1] = newWord; // Remember new word.
         }
 
-        static void PCWord(ref int endGame, ref char letter, ref int[] counter, ref string[] usedWords, string[][] pcWords)
+        static void PCWord(ref int endGame, ref char letter, ref int[] counter, List<string> usedWords, string[][] pcWords)
         {
             int orderNumber = letter - 'a';
             string temp;
@@ -163,7 +159,7 @@ namespace Words
 
                     if (CheckUnique(temp, usedWords))
                     {
-                        AddUsedWord(temp, ref usedWords);
+                        AddUsedWord(temp, usedWords);
                         correctAnswer = 1;
                         letter = temp[temp.Length - 1]; // Remember letter for next player.
                         /* If it will be needed - uncomment and test
