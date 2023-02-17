@@ -12,17 +12,17 @@
 
             FillPCWords(ref pcWords, file);
 
-            int endGame = 0;
+            bool isEndGame = false;
             char letter = 'a';
 
             Console.WriteLine("Welcome to Words game!");
             Console.WriteLine("To get prompt enter 'xxx'.");
             Console.WriteLine("To end game enter 'qqq'.");
 
-            while (endGame == 0)
+            while (!isEndGame)
             {
-                PCWord(ref endGame, ref letter, ref counter, usedWords, pcWords); // PC first - for user can see, at witch letter he need write his word.
-                UserWord(ref endGame, ref letter, ref counter, usedWords, ref pcWords);
+                PCWord(ref isEndGame, ref letter, ref counter, usedWords, pcWords); // PC first - for user can see, at witch letter he need write his word.
+                UserWord(ref isEndGame, ref letter, ref counter, usedWords, ref pcWords);
             }
 
 
@@ -33,12 +33,12 @@
             SavePCWords(pcWords, file);
         }
 
-        static void UserWord(ref int endGame, ref char letter, ref int[] counter, List<string> usedWords, ref string[][] pcWords)
+        static void UserWord(ref bool isEndGame, ref char letter, ref int[] counter, List<string> usedWords, ref string[][] pcWords)
         {
             string? temp;
-            int correctAnswer = 0;
+            bool isWrongAnswer = true;
 
-            while (correctAnswer == 0)
+            while (isWrongAnswer)
             {
                 Console.Write("User: ");
                 temp = Console.ReadLine();
@@ -49,18 +49,18 @@
                 }
                 else if (temp == "qqq")
                 {
-                    endGame = 1;
+                    isEndGame = true;
                     break;
                 }
                 else if (temp == "xxx") // Use prompt.
                 {
-                    PCWord(ref endGame, ref letter, ref counter, usedWords, pcWords);
+                    PCWord(ref isEndGame, ref letter, ref counter, usedWords, pcWords);
                     break;
                 }
                 else if (temp == "_test_")
                 {
                     TestMode(ref pcWords);
-                    endGame = 1;
+                    isEndGame = true;
                     break;
                 }
                 else if (temp[0] == letter)
@@ -83,7 +83,7 @@
                         }
 
                         AddUsedWord(temp, usedWords);
-                        correctAnswer = 1;
+                        isWrongAnswer = false;
                         letter = temp[^1]; // Remember letter for next player.
                         /* If it will be needed - uncomment and test
                         // If all existent common words on that letter are used, use previous letter
@@ -139,13 +139,13 @@
             pcWords[letter - 'a'][^1] = newWord; // Remember new word.
         }
 
-        static void PCWord(ref int endGame, ref char letter, ref int[] counter, List<string> usedWords, string[][] pcWords)
+        static void PCWord(ref bool isEndGame, ref char letter, ref int[] counter, List<string> usedWords, string[][] pcWords)
         {
             int orderNumber = letter - 'a';
             string temp;
-            int correctAnswer = 0;
+            bool isWrongAnswer = true;
 
-            while (correctAnswer == 0)
+            while (isWrongAnswer)
             {
                 if (counter[orderNumber] < pcWords[orderNumber].Length) // If PC have unused words on aproppriate letter...
                 {
@@ -156,7 +156,7 @@
                     if (CheckUnique(temp, usedWords))
                     {
                         AddUsedWord(temp, usedWords);
-                        correctAnswer = 1;
+                        isWrongAnswer = false;
                         letter = temp[^1]; // Remember letter for next player.
                         /* If it will be needed - uncomment and test
                         // If all existent common words on that letter are used, use previous letter
@@ -173,7 +173,7 @@
                 }
                 else // If PC used all words - end of game.
                 {
-                    endGame = 1;
+                    isEndGame = true;
                     break;
                 }
             }
