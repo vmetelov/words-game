@@ -10,8 +10,13 @@ bool isEndGame = false;
 char letter = 'a';
 
 Console.WriteLine("Welcome to Words game!");
-Console.WriteLine("To get prompt enter 'xxx'.");
-Console.WriteLine("To end game enter 'qqq'.");
+Console.WriteLine();
+Console.WriteLine("Available commands:");
+Console.WriteLine("xxx      - get prompt");
+Console.WriteLine("qqq      - end the game");
+Console.WriteLine("_add_    - add new words to PC dictionary");
+Console.WriteLine("_check_' - perform check for possible duplicates.");
+Console.WriteLine();
 
 while (!isEndGame)
 {
@@ -50,9 +55,15 @@ void UserWord(ref bool isEndGame, ref char letter, int[] counter, List<string> u
             PCWord(ref isEndGame, ref letter, counter, usedWords, pcWords);
             break;
         }
-        else if (temp == "_test_")
+        else if (temp == "_add_")
         {
-            TestMode(pcWords);
+            AddMultipleNewWords(pcWords);
+            isEndGame = true;
+            break;
+        }
+        else if (temp == "_check_")
+        {
+            CheckDuplicates(pcWords);
             isEndGame = true;
             break;
         }
@@ -199,31 +210,6 @@ void SavePCWords(string[][] pcWords, string file)
         }
 
         writer.WriteLine();
-    }
-}
-
-void TestMode(string[][] pcWords)
-{
-    string command;
-
-    Console.WriteLine("Welcome to Test Mode!");
-    while (true)
-    {
-        Console.WriteLine("Do you want to 'add' new words to PC dictionary, start 'check' for duplicates or 'exit' of Test Mode?");
-        command = Console.ReadLine()!;
-
-        if (command == "add")
-        {
-            AddMultipleNewWords(pcWords);
-        }
-        else if (command == "check")
-        {
-            CheckDuplicates(pcWords);
-        }
-        else if (command == "exit")
-        {
-            break;
-        }
     }
 }
 
