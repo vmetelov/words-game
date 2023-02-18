@@ -9,6 +9,7 @@ FillPCWords(pcWords, file);
 bool isEndGame = false;
 char letter = 'a';
 
+Console.ForegroundColor = ConsoleColor.Yellow;
 Console.WriteLine("Welcome to Words game!");
 Console.WriteLine();
 Console.WriteLine("Available commands:");
@@ -17,6 +18,7 @@ Console.WriteLine("qqq      - end the game");
 Console.WriteLine("_add_    - add new words to PC dictionary");
 Console.WriteLine("_check_' - perform check for possible duplicates.");
 Console.WriteLine();
+Console.ForegroundColor = ConsoleColor.Gray;
 
 while (!isEndGame)
 {
@@ -24,8 +26,11 @@ while (!isEndGame)
     UserWord(ref isEndGame, ref letter, counter, usedWords, pcWords);
 }
 
+Console.ForegroundColor = ConsoleColor.Yellow;
+Console.WriteLine();
 Console.WriteLine("Game over!");
 Console.WriteLine($"Total quantity of used words = {usedWords.Count}.");
+Console.ForegroundColor = ConsoleColor.Gray;
 
 SavePCWords(pcWords, file);
 
@@ -73,15 +78,19 @@ void UserWord(ref bool isEndGame, ref char letter, int[] counter, List<string> u
             {
                 if (!IsKnown(temp, pcWords, letter)) // Check if this word present in PC dictionary.
                 {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine("I don't know such word. Are you sure? (y/n)");
 
                     if (Console.ReadLine() == "y")
                     {
                         AddNewWord(temp, pcWords, letter);
+                        Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine($"Word '{temp}' remembered.");
+                        Console.ForegroundColor = ConsoleColor.Gray;
                     }
                     else
                     {
+                        Console.ForegroundColor = ConsoleColor.Gray;
                         continue;
                     }
                 }
@@ -99,12 +108,16 @@ void UserWord(ref bool isEndGame, ref char letter, int[] counter, List<string> u
             }
             else
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"Word '{temp}' was already used.");
+                Console.ForegroundColor = ConsoleColor.Gray;
             }
         }
         else
         {
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Wrong word.");
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
     }
 }
@@ -172,7 +185,9 @@ void PCWord(ref bool isEndGame, ref char letter, int[] counter, List<string> use
             }
             else
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"Word '{temp}' was already used");
+                Console.ForegroundColor = ConsoleColor.Gray;
             }
         }
         else // If PC used all words - end of game.
@@ -215,6 +230,7 @@ void SavePCWords(string[][] pcWords, string file)
 
 void AddMultipleNewWords(string[][] pcWords)
 {
+    Console.ForegroundColor = ConsoleColor.Yellow;
     Console.WriteLine("To stop adding of words enter '_exit_'");
 
     while (true)
@@ -234,18 +250,23 @@ void AddMultipleNewWords(string[][] pcWords)
 
         if (IsKnown(temp, pcWords, letter)) // Check if this word present in PC dictionary.
         {
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"Word '{temp}' already present in PC dictionary.");
         }
         else
         {
             AddNewWord(temp, pcWords, letter);
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"Word '{temp}' added.");
         }
+        Console.ForegroundColor = ConsoleColor.Yellow;
     }
+    Console.ForegroundColor = ConsoleColor.Gray;
 }
 
 void CheckDuplicates(string[][] pcWords)
 {
+    Console.ForegroundColor = ConsoleColor.Yellow;
     Console.WriteLine("Check is started.");
     string repeatedWords = "Check failed. Repeated words: ";
     bool isCheckSuccessful = true;
@@ -274,16 +295,19 @@ void CheckDuplicates(string[][] pcWords)
 
         if (pcWords[counterArrays].Length != initialLength)
         {
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"Letter {(char)('a' + counterArrays)}, array initial length: {initialLength}, array current length: {pcWords[counterArrays].Length}");
         }
     }
 
     if (isCheckSuccessful)
     {
+        Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine("Check is successful. No duplicates found.");
     }
     else
     {
         Console.WriteLine(repeatedWords);
     }
+    Console.ForegroundColor = ConsoleColor.Gray;
 }
