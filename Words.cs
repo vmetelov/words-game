@@ -280,7 +280,7 @@ void CheckDuplicates(string[][] pcWords)
 
     if (isCheckSuccessful)
     {
-        Console.WriteLine("Check is successful.");
+        Console.WriteLine("Check is successful. No duplicates found.");
     }
     else
     {
