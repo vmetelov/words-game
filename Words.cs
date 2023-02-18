@@ -214,33 +214,7 @@ void TestMode(string[][] pcWords)
 
         if (command == "add")
         {
-            Console.WriteLine("To stop adding of words enter '_exit_'");
-
-            while (true)
-            {
-                Console.WriteLine("Which word do you want to add?");
-                string? temp = Console.ReadLine();
-                if (string.IsNullOrEmpty(temp))
-                {
-                    continue;
-                }
-                else if (temp == "_exit_")
-                {
-                    break;
-                }
-
-                char letter = temp[0];
-
-                if (IsKnown(temp, pcWords, letter)) // Check if this word present in PC dictionary.
-                {
-                    Console.WriteLine($"Word '{temp}' already present in PC dictionary.");
-                }
-                else
-                {
-                    AddNewWord(temp, pcWords, letter);
-                    Console.WriteLine($"Word '{temp}' added.");
-                }
-            }
+            AddMultipleNewWords(pcWords);
         }
         else if (command == "check")
         {
@@ -249,6 +223,37 @@ void TestMode(string[][] pcWords)
         else if (command == "exit")
         {
             break;
+        }
+    }
+}
+
+void AddMultipleNewWords(string[][] pcWords)
+{
+    Console.WriteLine("To stop adding of words enter '_exit_'");
+
+    while (true)
+    {
+        Console.WriteLine("Which word do you want to add?");
+        string? temp = Console.ReadLine();
+        if (string.IsNullOrEmpty(temp))
+        {
+            continue;
+        }
+        else if (temp == "_exit_")
+        {
+            break;
+        }
+
+        char letter = temp[0];
+
+        if (IsKnown(temp, pcWords, letter)) // Check if this word present in PC dictionary.
+        {
+            Console.WriteLine($"Word '{temp}' already present in PC dictionary.");
+        }
+        else
+        {
+            AddNewWord(temp, pcWords, letter);
+            Console.WriteLine($"Word '{temp}' added.");
         }
     }
 }
