@@ -209,28 +209,37 @@ void TestMode(string[][] pcWords)
     Console.WriteLine("Welcome to Test Mode!");
     while (true)
     {
-        Console.WriteLine("Do you want to 'add' new word to PC dictionary, start 'check' for duplicates or 'exit' of Test Mode?");
+        Console.WriteLine("Do you want to 'add' new words to PC dictionary, start 'check' for duplicates or 'exit' of Test Mode?");
         command = Console.ReadLine()!;
 
         if (command == "add")
         {
-            Console.WriteLine("Which word do you want to add?");
-            string? temp = Console.ReadLine();
-            if (string.IsNullOrEmpty(temp))
-            {
-                continue;
-            }
+            Console.WriteLine("To stop adding of words enter '_exit_'");
 
-            char letter = temp[0];
+            while (true)
+            {
+                Console.WriteLine("Which word do you want to add?");
+                string? temp = Console.ReadLine();
+                if (string.IsNullOrEmpty(temp))
+                {
+                    continue;
+                }
+                else if (temp == "_exit_")
+                {
+                    break;
+                }
 
-            if (IsKnown(temp, pcWords, letter)) // Check if this word present in PC dictionary.
-            {
-                Console.WriteLine($"Word '{temp}' already present in PC dictionary.");
-            }
-            else
-            {
-                AddNewWord(temp, pcWords, letter);
-                Console.WriteLine($"Word '{temp}' added.");
+                char letter = temp[0];
+
+                if (IsKnown(temp, pcWords, letter)) // Check if this word present in PC dictionary.
+                {
+                    Console.WriteLine($"Word '{temp}' already present in PC dictionary.");
+                }
+                else
+                {
+                    AddNewWord(temp, pcWords, letter);
+                    Console.WriteLine($"Word '{temp}' added.");
+                }
             }
         }
         else if (command == "check")
