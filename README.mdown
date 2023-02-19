@@ -4,7 +4,7 @@ In this game, you play with PC. Each of you take turns in writing ONE word (not 
 
 In this example, the words are nouns, but it may differ.
 
-The PC dictionary - separated file.
+The PC dictionary - separated file. If it doesn't exist, you will be asked whether you want to create and fill it.
 
 This game was created as Console app to be able to run on any OS.
 
