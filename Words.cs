@@ -22,7 +22,7 @@ if (FillPCWords(pcWords, file))
 
     while (!isEndGame)
     {
-        PCWord(ref isEndGame, ref letter, counter, usedWords, pcWords); // PC first - for user can see, at witch letter he need write his word.
+        PCWord(ref isEndGame, ref letter, counter, usedWords, pcWords); // PC first - to user can see, at which letter he needs to write his word.
         UserWord(ref isEndGame, ref letter, counter, usedWords, pcWords);
     }
 
@@ -169,7 +169,7 @@ void PCWord(ref bool isEndGame, ref char letter, int[] counter, List<string> use
         {
             temp = pcWords[orderNumber][counter[orderNumber]]; // Pick next word.
             counter[orderNumber]++; // Increase counter of used words on this letter.
-            Console.WriteLine("PC  : " + temp); // Display word.
+            Console.WriteLine("PC  : " + temp); // Display the word.
 
             if (IsUnique(temp, usedWords))
             {
@@ -191,7 +191,7 @@ void PCWord(ref bool isEndGame, ref char letter, int[] counter, List<string> use
                 Console.ForegroundColor = ConsoleColor.Gray;
             }
         }
-        else // If PC used all words - end of game.
+        else // If PC has used all its words - game over.
         {
             isEndGame = true;
             break;
