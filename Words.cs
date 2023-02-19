@@ -292,6 +292,10 @@ void AddMultipleNewWords(string[][] pcWords)
         {
             break;
         }
+        else if (!temp.All(char.IsLetter))
+        {
+            continue;
+        }
 
         char letter = temp[0];
 
