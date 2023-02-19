@@ -39,54 +39,59 @@ if (FillPCWords(pcWords, file))
 
 void UserWord(ref bool isEndGame, ref char letter, int[] counter, List<string> usedWords, string[][] pcWords)
 {
-    string? temp;
+    string? input;
     bool isWrongAnswer = true;
 
     while (isWrongAnswer)
     {
         Console.Write("User: ");
-        temp = Console.ReadLine();
+        input = Console.ReadLine();
 
-        if (string.IsNullOrEmpty(temp))
+        if (string.IsNullOrEmpty(input))
         {
             continue;
         }
-        else if (temp == "qqq")
+        else if (input == "qqq")
         {
             isEndGame = true;
             break;
         }
-        else if (temp == "xxx") // Use prompt.
+        else if (input == "xxx") // Use prompt.
         {
             PCWord(ref isEndGame, ref letter, counter, usedWords, pcWords);
             break;
         }
-        else if (temp == "_add_")
+        else if (input == "_add_")
         {
             AddMultipleNewWords(pcWords);
             isEndGame = true;
             break;
         }
-        else if (temp == "_check_")
+        else if (input == "_check_")
         {
             CheckDuplicates(pcWords);
             isEndGame = true;
             break;
         }
-        else if (temp[0] == letter)
+        else if (input[0] == letter && input.All(char.IsLower))
         {
-            if (IsUnique(temp, usedWords)) // Check if this word was already used.
+            if (IsUnique(input, usedWords)) // Check if this word was already used.
             {
-                if (!IsKnown(temp, pcWords, letter)) // Check if this word present in PC dictionary.
+                if (!IsKnown(input, pcWords, letter)) // Check if this word present in PC dictionary.
                 {
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine("I don't know such word. Are you sure? (y/n)");
-
-                    if (Console.ReadLine() == "y")
+                    string? answer = Console.ReadLine();
+                    if (string.IsNullOrEmpty(answer))
                     {
-                        AddNewWord(temp, pcWords, letter);
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        continue;
+                    }
+                    else if (answer.ToLowerInvariant() == "y")
+                    {
+                        AddNewWord(input, pcWords, letter);
                         Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine($"Word '{temp}' remembered.");
+                        Console.WriteLine($"Word '{input}' remembered.");
                         Console.ForegroundColor = ConsoleColor.Gray;
                     }
                     else
@@ -96,21 +101,21 @@ void UserWord(ref bool isEndGame, ref char letter, int[] counter, List<string> u
                     }
                 }
 
-                AddUsedWord(temp, usedWords);
+                AddUsedWord(input, usedWords);
                 isWrongAnswer = false;
-                letter = temp[^1]; // Remember letter for next player.
+                letter = input[^1]; // Remember letter for next player.
                 /* If it will be needed - uncomment and test
                 // If all existent common words on that letter are used, use previous letter
                 if ((letter == 'x' || letter == 'y') && (counter[letter - 'a'] == pcWords[letter - 'a'].Length))
                 {
-                    letter = temp[temp.Length - 2];
+                    letter = input[input.Length - 2];
                 }
                 */
             }
             else
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"Word '{temp}' was already used.");
+                Console.WriteLine($"Word '{input}' was already used.");
                 Console.ForegroundColor = ConsoleColor.Gray;
             }
         }
@@ -160,34 +165,34 @@ void AddNewWord(string newWord, string[][] pcWords, char letter)
 void PCWord(ref bool isEndGame, ref char letter, int[] counter, List<string> usedWords, string[][] pcWords)
 {
     int orderNumber = letter - 'a';
-    string temp;
+    string word;
     bool isWrongAnswer = true;
 
     while (isWrongAnswer)
     {
         if (counter[orderNumber] < pcWords[orderNumber].Length) // If PC have unused words on aproppriate letter...
         {
-            temp = pcWords[orderNumber][counter[orderNumber]]; // Pick next word.
+            word = pcWords[orderNumber][counter[orderNumber]]; // Pick next word.
             counter[orderNumber]++; // Increase counter of used words on this letter.
-            Console.WriteLine("PC  : " + temp); // Display the word.
+            Console.WriteLine("PC  : " + word); // Display the word.
 
-            if (IsUnique(temp, usedWords))
+            if (IsUnique(word, usedWords))
             {
-                AddUsedWord(temp, usedWords);
+                AddUsedWord(word, usedWords);
                 isWrongAnswer = false;
-                letter = temp[^1]; // Remember letter for next player.
+                letter = word[^1]; // Remember letter for next player.
                 /* If it will be needed - uncomment and test
                 // If all existent common words on that letter are used, use previous letter
                 if ((letter == 'x' || letter == 'y') && (counter[letter - 'a'] == pcWords[letter - 'a'].Length))
                 {
-                    letter = temp[temp.Length - 2];
+                    letter = word[word.Length - 2];
                 }
                 */
             }
             else
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"Word '{temp}' was already used");
+                Console.WriteLine($"Word '{word}' was already used");
                 Console.ForegroundColor = ConsoleColor.Gray;
             }
         }
@@ -220,8 +225,15 @@ bool FillPCWords(string[][] pcWords, string file)
         Console.ForegroundColor = ConsoleColor.Red;
         Console.WriteLine("File with PC dictionary not found. Do you want to create new one and add new words to it? (y/n)");
         Console.ForegroundColor = ConsoleColor.Yellow;
-#warning ADD ".ToLowerInvariant()"
-        if (Console.ReadLine() == "y")
+        string? input = Console.ReadLine();
+        if (string.IsNullOrEmpty(input))
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("It's impossible to play into the game without that file.");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            return false;
+        }
+        else if (input.ToLowerInvariant() == "y")
         {
             Console.WriteLine("It's important to add at least one word for each alphabet letter.");
             for (int counter = 0; counter < pcWords.Length; counter++)
@@ -271,28 +283,32 @@ void AddMultipleNewWords(string[][] pcWords)
     while (true)
     {
         Console.WriteLine("Which word do you want to add?");
-        string? temp = Console.ReadLine();
-        if (string.IsNullOrEmpty(temp))
+        string? input = Console.ReadLine();
+        if (string.IsNullOrEmpty(input))
         {
             continue;
         }
-        else if (temp == "_exit_")
+        else if (input == "_exit_")
         {
             break;
         }
+        else if (!input.All(char.IsLower))
+        {
+            continue;
+        }
 
-        char letter = temp[0];
+        char letter = input[0];
 
-        if (IsKnown(temp, pcWords, letter)) // Check if this word present in PC dictionary.
+        if (IsKnown(input, pcWords, letter)) // Check if this word present in PC dictionary.
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"Word '{temp}' already present in PC dictionary.");
+            Console.WriteLine($"Word '{input}' already present in PC dictionary.");
         }
         else
         {
-            AddNewWord(temp, pcWords, letter);
+            AddNewWord(input, pcWords, letter);
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"Word '{temp}' added.");
+            Console.WriteLine($"Word '{input}' added.");
         }
         Console.ForegroundColor = ConsoleColor.Yellow;
     }
