@@ -73,7 +73,7 @@ void UserWord(ref bool isEndGame, ref char letter, int[] counter, List<string> u
             isEndGame = true;
             break;
         }
-        else if (input[0] == letter && input.All(char.IsLetter))
+        else if (input[0] == letter && input.All(char.IsLower))
         {
             if (IsUnique(input, usedWords)) // Check if this word was already used.
             {
@@ -292,7 +292,7 @@ void AddMultipleNewWords(string[][] pcWords)
         {
             break;
         }
-        else if (!input.All(char.IsLetter))
+        else if (!input.All(char.IsLower))
         {
             continue;
         }
