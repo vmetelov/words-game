@@ -73,8 +73,7 @@ void UserWord(ref bool isEndGame, ref char letter, int[] counter, List<string> u
             isEndGame = true;
             break;
         }
-        #warning ADD check to ensure all input entries - letters
-        else if (input[0] == letter)
+        else if (input[0] == letter && input.All(char.IsLetter))
         {
             if (IsUnique(input, usedWords)) // Check if this word was already used.
             {
