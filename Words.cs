@@ -303,7 +303,7 @@ void CheckDuplicates(string[][] pcWords)
 {
     Console.ForegroundColor = ConsoleColor.Yellow;
     Console.WriteLine("Check is started.");
-    string repeatedWords = "Check failed. Repeated words: ";
+    string repeatedWords = "Removed repeated words: ";
     bool isCheckSuccessful = true;
 
     for (int counterArrays = 0; counterArrays < pcWords.Length; counterArrays++)
@@ -335,13 +335,17 @@ void CheckDuplicates(string[][] pcWords)
         }
     }
 
+    Console.ForegroundColor = ConsoleColor.Yellow;
+    Console.WriteLine("Check is finished.");
+
     if (isCheckSuccessful)
     {
         Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine("Check is successful. No duplicates found.");
+        Console.WriteLine("No duplicates found.");
     }
     else
     {
+        Console.ForegroundColor = ConsoleColor.Red;
         Console.WriteLine(repeatedWords);
     }
     Console.ForegroundColor = ConsoleColor.Gray;
