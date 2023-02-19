@@ -4,35 +4,36 @@ string[][] pcWords = new string[26][];
 
 string file = "pcWords.txt"; // Path to file with words.
 
-FillPCWords(pcWords, file);
-
-bool isEndGame = false;
-char letter = 'a';
-
-Console.ForegroundColor = ConsoleColor.Yellow;
-Console.WriteLine("Welcome to Words game!");
-Console.WriteLine();
-Console.WriteLine("Available commands:");
-Console.WriteLine("xxx      - get prompt");
-Console.WriteLine("qqq      - end the game");
-Console.WriteLine("_add_    - add new words to PC dictionary");
-Console.WriteLine("_check_' - perform check for possible duplicates.");
-Console.WriteLine();
-Console.ForegroundColor = ConsoleColor.Gray;
-
-while (!isEndGame)
+if (FillPCWords(pcWords, file))
 {
-    PCWord(ref isEndGame, ref letter, counter, usedWords, pcWords); // PC first - for user can see, at witch letter he need write his word.
-    UserWord(ref isEndGame, ref letter, counter, usedWords, pcWords);
+    bool isEndGame = false;
+    char letter = 'a';
+
+    Console.ForegroundColor = ConsoleColor.Yellow;
+    Console.WriteLine("Welcome to Words game!");
+    Console.WriteLine();
+    Console.WriteLine("Available commands:");
+    Console.WriteLine("xxx      - get prompt");
+    Console.WriteLine("qqq      - end the game");
+    Console.WriteLine("_add_    - add new words to PC dictionary");
+    Console.WriteLine("_check_' - perform check for possible duplicates.");
+    Console.WriteLine();
+    Console.ForegroundColor = ConsoleColor.Gray;
+
+    while (!isEndGame)
+    {
+        PCWord(ref isEndGame, ref letter, counter, usedWords, pcWords); // PC first - for user can see, at witch letter he need write his word.
+        UserWord(ref isEndGame, ref letter, counter, usedWords, pcWords);
+    }
+
+    Console.ForegroundColor = ConsoleColor.Yellow;
+    Console.WriteLine();
+    Console.WriteLine("Game over!");
+    Console.WriteLine($"Total quantity of used words = {usedWords.Count}.");
+    Console.ForegroundColor = ConsoleColor.Gray;
+
+    SavePCWords(pcWords, file);
 }
-
-Console.ForegroundColor = ConsoleColor.Yellow;
-Console.WriteLine();
-Console.WriteLine("Game over!");
-Console.WriteLine($"Total quantity of used words = {usedWords.Count}.");
-Console.ForegroundColor = ConsoleColor.Gray;
-
-SavePCWords(pcWords, file);
 
 
 
@@ -198,17 +199,51 @@ void PCWord(ref bool isEndGame, ref char letter, int[] counter, List<string> use
     }
 }
 
-void FillPCWords(string[][] pcWords, string file)
+bool FillPCWords(string[][] pcWords, string file)
 {
-    using StreamReader reader = new(file);
-
-    string input;
-    char[] separators = { ' ' };
-
-    for (int counter = 0; counter < pcWords.Length; counter++)
+    try
     {
-        input = reader.ReadLine()!;
-        pcWords[counter] = input.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+        using StreamReader reader = new(file);
+
+        string input;
+        char[] separators = { ' ' };
+
+        for (int counter = 0; counter < pcWords.Length; counter++)
+        {
+            input = reader.ReadLine()!;
+            pcWords[counter] = input.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+        }
+        return true;
+    }
+    catch (FileNotFoundException)
+    {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine("File with PC dictionary not found. Do you want to create new one and add new words to it? (y/n)");
+        Console.ForegroundColor = ConsoleColor.Yellow;
+#warning ADD ".ToLowerInvariant()"
+        if (Console.ReadLine() == "y")
+        {
+            Console.WriteLine("It's important to add at least one word for each alphabet letter.");
+            for (int counter = 0; counter < pcWords.Length; counter++)
+            {
+                pcWords[counter] = Array.Empty<string>();
+            }
+
+            AddMultipleNewWords(pcWords);
+
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("The file successfully created!.");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            return true;
+        }
+        else
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("It's impossible to play into the game without that file.");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            return false;
+        }
     }
 }
 
