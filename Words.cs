@@ -16,7 +16,7 @@ if (FillPCWords(pcWords, file))
     Console.WriteLine("xxx      - get prompt");
     Console.WriteLine("qqq      - end the game");
     Console.WriteLine("_add_    - add new words to PC dictionary");
-    Console.WriteLine("_check_' - perform check for possible duplicates.");
+    Console.WriteLine("_check_  - perform check for possible duplicates.");
     Console.WriteLine();
     Console.ForegroundColor = ConsoleColor.Gray;
 
