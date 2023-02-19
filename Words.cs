@@ -81,8 +81,13 @@ void UserWord(ref bool isEndGame, ref char letter, int[] counter, List<string> u
                 {
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine("I don't know such word. Are you sure? (y/n)");
-
-                    if (Console.ReadLine() == "y")
+                    string? input = Console.ReadLine();
+                    if (string.IsNullOrEmpty(input))
+                    {
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        continue;
+                    }
+                    else if (input.ToLowerInvariant() == "y")
                     {
                         AddNewWord(temp, pcWords, letter);
                         Console.ForegroundColor = ConsoleColor.Green;
@@ -220,8 +225,15 @@ bool FillPCWords(string[][] pcWords, string file)
         Console.ForegroundColor = ConsoleColor.Red;
         Console.WriteLine("File with PC dictionary not found. Do you want to create new one and add new words to it? (y/n)");
         Console.ForegroundColor = ConsoleColor.Yellow;
-#warning ADD ".ToLowerInvariant()"
-        if (Console.ReadLine() == "y")
+        string? input = Console.ReadLine();
+        if (string.IsNullOrEmpty(input))
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("It's impossible to play into the game without that file.");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            return false;
+        }
+        else if (input.ToLowerInvariant() == "y")
         {
             Console.WriteLine("It's important to add at least one word for each alphabet letter.");
             for (int counter = 0; counter < pcWords.Length; counter++)
