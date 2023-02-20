@@ -342,10 +342,7 @@ void CheckDuplicates(string[][] pcWords)
         {
             Array.Resize(ref pcWords[counterArrays], knownElements.Count);
             knownElements.CopyTo(pcWords[counterArrays]);
-        }
 
-        if (pcWords[counterArrays].Length != initialLength)
-        {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"Letter {(char)('a' + counterArrays)}, array initial length: {initialLength}, array current length: {pcWords[counterArrays].Length}");
         }
