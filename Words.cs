@@ -235,7 +235,7 @@ bool FillPCWords(string[][] pcWords, string file)
         }
         else if (input.ToLowerInvariant() == "y")
         {
-            Console.WriteLine("It's important to add at least one word for each alphabet letter.");
+            Console.WriteLine("It's recommended to add at least one word starting with 'a'.");
             for (int counter = 0; counter < pcWords.Length; counter++)
             {
                 pcWords[counter] = Array.Empty<string>();
