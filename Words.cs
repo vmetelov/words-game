@@ -344,7 +344,7 @@ void CheckDuplicates(string[][] pcWords)
             knownElements.CopyTo(pcWords[counterArrays]);
 
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"Letter {(char)('a' + counterArrays)}, array initial length: {initialLength}, array current length: {pcWords[counterArrays].Length}");
+            Console.WriteLine($"Letter {(char)('a' + counterArrays)} - initial quantity of words: {initialLength}, corrected quantity of words: {pcWords[counterArrays].Length}");
         }
     }
 
