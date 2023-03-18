@@ -1,13 +1,13 @@
-﻿int[] counter = new int[26]; // Counter of used PC words starting with each letter.
+﻿int[] pcUsedWordsCounters = new int[26]; // Counters of used PC words starting with each letter.
 List<string> usedWords = new();
 string[][] pcWords = new string[26][];
 
-string file = "pcWords.txt"; // Path to file with words.
+string filePath = "pcWords.txt"; // Path to file with words.
 
-if (FillPCWords(pcWords, file))
+if (FillPCWords(pcWords, filePath))
 {
     bool isEndGame = false;
-    char letter = 'a';
+    char firstLetter = 'a';
 
     Console.ForegroundColor = ConsoleColor.Yellow;
     Console.WriteLine("Welcome to Words game!");
@@ -22,8 +22,8 @@ if (FillPCWords(pcWords, file))
 
     while (!isEndGame)
     {
-        PCWord(ref isEndGame, ref letter, counter, usedWords, pcWords); // PC first - to user can see, at which letter he needs to write his word.
-        UserWord(ref isEndGame, ref letter, counter, usedWords, pcWords);
+        PCWord(ref isEndGame, ref firstLetter, pcUsedWordsCounters, usedWords, pcWords); // PC first - to user can see, at which letter he need to write his word.
+        UserWord(ref isEndGame, ref firstLetter, pcUsedWordsCounters, usedWords, pcWords);
     }
 
     Console.ForegroundColor = ConsoleColor.Yellow;
@@ -32,12 +32,12 @@ if (FillPCWords(pcWords, file))
     Console.WriteLine($"Total quantity of used words = {usedWords.Count}.");
     Console.ForegroundColor = ConsoleColor.Gray;
 
-    SavePCWords(pcWords, file);
+    SavePCWords(pcWords, filePath);
 }
 
 
 
-void UserWord(ref bool isEndGame, ref char letter, int[] counter, List<string> usedWords, string[][] pcWords)
+void UserWord(ref bool isEndGame, ref char firstLetter, int[] pcUsedWordsCounters, List<string> usedWords, string[][] pcWords)
 {
     string? input;
     bool isWrongAnswer = true;
@@ -58,7 +58,7 @@ void UserWord(ref bool isEndGame, ref char letter, int[] counter, List<string> u
         }
         else if (input == "xxx") // Use prompt.
         {
-            PCWord(ref isEndGame, ref letter, counter, usedWords, pcWords);
+            PCWord(ref isEndGame, ref firstLetter, pcUsedWordsCounters, usedWords, pcWords);
             break;
         }
         else if (input == "_add_")
@@ -73,11 +73,11 @@ void UserWord(ref bool isEndGame, ref char letter, int[] counter, List<string> u
             isEndGame = true;
             break;
         }
-        else if (input[0] == letter && input.All(char.IsLower))
+        else if (input[0] == firstLetter && input.All(char.IsLower))
         {
             if (IsUnique(input, usedWords)) // Check if this word was already used.
             {
-                if (!IsKnown(input, pcWords, letter)) // Check if this word present in PC dictionary.
+                if (!IsKnown(input, pcWords, firstLetter)) // Check if this word present in PC dictionary.
                 {
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine("I don't know such word. Are you sure? (y/n)");
@@ -89,7 +89,7 @@ void UserWord(ref bool isEndGame, ref char letter, int[] counter, List<string> u
                     }
                     else if (answer.ToLowerInvariant() == "y")
                     {
-                        AddNewWord(input, pcWords, letter);
+                        AddNewWord(input, pcWords, firstLetter);
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine($"Word '{input}' remembered.");
                         Console.ForegroundColor = ConsoleColor.Gray;
@@ -103,12 +103,12 @@ void UserWord(ref bool isEndGame, ref char letter, int[] counter, List<string> u
 
                 AddUsedWord(input, usedWords);
                 isWrongAnswer = false;
-                letter = input[^1]; // Remember letter for next player.
+                firstLetter = input[^1]; // Remember letter for next player.
                 /* If it will be needed - uncomment and test
                 // If all existent common words on that letter are used, use previous letter
-                if ((letter == 'x' || letter == 'y') && (counter[letter - 'a'] == pcWords[letter - 'a'].Length))
+                if ((firstLetter == 'x' || firstLetter == 'y') && (pcUsedWordsCounters[firstLetter - 'a'] == pcWords[firstLetter - 'a'].Length))
                 {
-                    letter = input[input.Length - 2];
+                    firstLetter = input[input.Length - 2];
                 }
                 */
             }
@@ -137,9 +137,9 @@ bool IsUnique(string word, List<string> usedWords)
     return true;
 }
 
-bool IsKnown(string word, string[][] pcWords, char letter)
+bool IsKnown(string word, string[][] pcWords, char firstLetter)
 {
-    int orderNumber = letter - 'a';
+    int orderNumber = firstLetter - 'a';
 
     for (int counter = 0; counter < pcWords[orderNumber].Length; counter++)
     {
@@ -156,36 +156,36 @@ void AddUsedWord(string newWord, List<string> usedWords)
     usedWords.Add(newWord); // Remember used word.
 }
 
-void AddNewWord(string newWord, string[][] pcWords, char letter)
+void AddNewWord(string newWord, string[][] pcWords, char firstLetter)
 {
-    Array.Resize(ref pcWords[letter - 'a'], pcWords[letter - 'a'].Length + 1); // Resize appropriate letter words array by 1 more.
-    pcWords[letter - 'a'][^1] = newWord; // Remember new word.
+    Array.Resize(ref pcWords[firstLetter - 'a'], pcWords[firstLetter - 'a'].Length + 1); // Resize appropriate letter words array by 1 more.
+    pcWords[firstLetter - 'a'][^1] = newWord; // Remember new word.
 }
 
-void PCWord(ref bool isEndGame, ref char letter, int[] counter, List<string> usedWords, string[][] pcWords)
+void PCWord(ref bool isEndGame, ref char firstLetter, int[] pcUsedWordsCounters, List<string> usedWords, string[][] pcWords)
 {
-    int orderNumber = letter - 'a';
+    int orderNumber = firstLetter - 'a';
     string word;
     bool isWrongAnswer = true;
 
     while (isWrongAnswer)
     {
-        if (counter[orderNumber] < pcWords[orderNumber].Length) // If PC have unused words on aproppriate letter...
+        if (pcUsedWordsCounters[orderNumber] < pcWords[orderNumber].Length) // If PC have unused words on aproppriate letter:
         {
-            word = pcWords[orderNumber][counter[orderNumber]]; // Pick next word.
-            counter[orderNumber]++; // Increase counter of used words on this letter.
+            word = pcWords[orderNumber][pcUsedWordsCounters[orderNumber]]; // Pick next word.
+            pcUsedWordsCounters[orderNumber]++; // Increase counter of used words on this letter.
             Console.WriteLine("PC  : " + word); // Display the word.
 
             if (IsUnique(word, usedWords))
             {
                 AddUsedWord(word, usedWords);
                 isWrongAnswer = false;
-                letter = word[^1]; // Remember letter for next player.
+                firstLetter = word[^1]; // Remember letter for next player.
                 /* If it will be needed - uncomment and test
                 // If all existent common words on that letter are used, use previous letter
-                if ((letter == 'x' || letter == 'y') && (counter[letter - 'a'] == pcWords[letter - 'a'].Length))
+                if ((firstLetter == 'x' || firstLetter == 'y') && (pcUsedWordsCounters[firstLetter - 'a'] == pcWords[firstLetter - 'a'].Length))
                 {
-                    letter = word[word.Length - 2];
+                    firstLetter = word[word.Length - 2];
                 }
                 */
             }
@@ -204,11 +204,11 @@ void PCWord(ref bool isEndGame, ref char letter, int[] counter, List<string> use
     }
 }
 
-bool FillPCWords(string[][] pcWords, string file)
+bool FillPCWords(string[][] pcWords, string filePath)
 {
     try
     {
-        using StreamReader reader = new(file);
+        using StreamReader reader = new(filePath);
 
         string input;
         char[] separators = { ' ' };
@@ -259,11 +259,11 @@ bool FillPCWords(string[][] pcWords, string file)
     }
 }
 
-void SavePCWords(string[][] pcWords, string file)
+void SavePCWords(string[][] pcWords, string filePath)
 {
-    File.WriteAllText(file, string.Empty); // Truncate file.
+    File.WriteAllText(filePath, string.Empty); // Truncate file.
 
-    using StreamWriter writer = new(file);
+    using StreamWriter writer = new(filePath);
     for (int counterArrays = 0; counterArrays < pcWords.Length; counterArrays++)
     {
         for (int counterWords = 0; counterWords < pcWords[counterArrays].Length; counterWords++)
@@ -297,16 +297,16 @@ void AddMultipleNewWords(string[][] pcWords)
             continue;
         }
 
-        char letter = input[0];
+        char firstLetter = input[0];
 
-        if (IsKnown(input, pcWords, letter)) // Check if this word present in PC dictionary.
+        if (IsKnown(input, pcWords, firstLetter)) // Check if this word present in PC dictionary.
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"Word '{input}' already present in PC dictionary.");
         }
         else
         {
-            AddNewWord(input, pcWords, letter);
+            AddNewWord(input, pcWords, firstLetter);
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"Word '{input}' added.");
         }
