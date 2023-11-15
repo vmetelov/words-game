@@ -87,7 +87,7 @@ void UserWord(ref bool isEndGame, ref char firstLetter, int[] pcUsedWordsCounter
             isEndGame = true;
             break;
         }
-        else if (input[0] == firstLetter && input.All(char.IsLower))
+        else if (input[0] == firstLetter && IsValidWord(input))
         {
             if (IsUnique(input, usedWords))
             {
@@ -140,6 +140,19 @@ void UserWord(ref bool isEndGame, ref char firstLetter, int[] pcUsedWordsCounter
             Console.ForegroundColor = ConsoleColor.Gray;
         }
     }
+}
+
+/// Check whether the word consists of only lowercase letters and hyphens.
+bool IsValidWord(string word)
+{
+    foreach (char glyph in word)
+    {
+        if (!(char.IsLower(glyph) || glyph.Equals('-')))
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
 /// Summary:
